@@ -33,6 +33,23 @@ class Controller {
         return ResponseEntity.ok().body(test)
     }
 
+    @PostMapping("/user/create")
+    fun createUser(
+        @RequestBody request: UserDtoRequest
+    ): ResponseEntity<UserDto> {
+        val newUser = UserDto(
+            email = request.email,
+            fullname = request.fullname,
+            password = request.password
+        )
+
+        // 생성된 사용자 데이터를 리스트에 추가
+        tests.add(newUser)
+
+        // ResponseEntity를 사용하여 OK 응답과 생성된 사용자 데이터 반환
+        return ResponseEntity.ok().body(newUser)
+    }
+
 
 //
     /*private val lotto = mutableListOf<LottoDto>()
