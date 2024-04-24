@@ -40,7 +40,7 @@ class Controller {
         val newUser = UserDto(
             email = request.email,
             fullname = request.fullname,
-            password = request.password
+            password = request.password,
         )
 
         // 생성된 사용자 데이터를 리스트에 추가
@@ -50,101 +50,40 @@ class Controller {
         return ResponseEntity.ok().body(newUser)
     }
 
+    @GetMapping("/lotto")
+    fun generateLottoNumbers(): ResponseEntity<List<List<Int>>> {
+        val lottoNumbers = mutableListOf<List<Int>>()
 
-//
-    /*private val lotto = mutableListOf<LottoDto>()
-    private val tests = mutableListOf<TestDto>()
-    private val users = mutableListOf<UserDto>()
-
-
-        @PostMapping("/user/login")
-        fun postTestDto(
-            @RequestBody request: UserDtoRequest
-        ): ResponseEntity<LottoDto> {
-            val test = UserDto(
-                email = request.email,
-                fullname = request.fullname,
-                password = request.password
-            )
-
-            // 생성된 데이터를 리스트에 추가
-            users.add(test)
-
-            // ResponseEntity를 사용하여 OK 응답과 생성된 데이터 반환
-            return ResponseEntity.ok().body(test)
-        }*/
-
-        @PostMapping("/user/create")
-        fun loginUser(@RequestBody request: UserDto): ResponseEntity<UserDto> {
-            // 받은 요청의 데이터를 그대로 응답에 사용
-            val response = UserDto(
-                fullName = request.fullName,
-                email = request.email,
-                password = request.password
-            )
-
-            return ResponseEntity.ok().body(response)
+        for (i in 1..5) {
+            val lotto = generateUniqueLotto()
+            lottoNumbers.add(lotto)
         }
 
+        return ResponseEntity.ok().body(lottoNumbers)
+    }
+
+    private fun generateUniqueLotto(): List<Int> {
+        val lotto = mutableListOf<Int>()
+        while (lotto.size < 7) {
+            val randomNumber = Random.nextInt(1, 46)
+            if (!lotto.contains(randomNumber)) {
+                lotto.add(randomNumber)
+            }
+        }
+        return lotto.sorted()
+    }
+
+    @PostMapping("/lotto")
+    fun generateLottoNumbers(
+        @RequestBody request: LottoDtoRequest
+    ): ResponseEntity<LottoDto> {
+        val lottoNumbers = LottoDto(
+            numbers = request.numbers
+        )
+
+        return ResponseEntity.ok().body(lottoNumbers)
+    }
 
 
-//    @PostMapping("/user/login")
-//    fun postTestDto(
-//        @RequestBody lottoDtoRequest: LottoDtoRequest
-//    ): ResponseEntity<LottoDto> {
-//        val faker = Faker(Locale.KOREA)
-//        val test = LottoDto(
-//            fullname = lottoDtoRequest.fullname,
-//            email = faker.internet().emailAddress(),
-//            password = Random().nextInt(10).toString(),
-//        )
-//        lotto.add(test)
-//        return ResponseEntity.ok().body(test)
-//    }
-//    @GetMapping("/test")
-//    fun getAllTestDto(
-//    ): ResponseEntity<List<TestDto>> {
-//        val response = tests
-//        return ResponseEntity.ok().body(response)
-//    }
-//
-//    @GetMapping("/test/{id}")
-//    fun getTestDto(
-//        @PathVariable("id") userId: String
-//    ): ResponseEntity<TestDto> {
-//        val response = tests.firstOrNull{it.id == userId}
-//        return ResponseEntity.ok().body(response)
-//    }
-//@RestController
-//class UserController {
-//
-//    // 임시 데이터베이스 대신 사용할 가짜 사용자 데이터
-//    val users = listOf(
-//        User("John Doe", "johndoe@example.com", "password123"),
-//        User("Jane Smith", "janesmith@example.com", "abc123")
-//    )
-//
-//    @PostMapping("/user/login")
-//    fun login(@RequestBody request: LoginRequest): Any {
-//        // 이메일과 비밀번호가 제공되었는지 확인
-//        if (request.email.isNullOrEmpty() || request.password.isNullOrEmpty()) {
-//            return mapOf("error" to "이메일과 비밀번호를 모두 입력해주세요.")
-//        }
-//
-//        // 사용자 찾기
-//        val user = users.find { it.email == request.email && it.password == request.password }
-//
-//        // 사용자가 없거나 비밀번호가 일치하지 않으면 에러 반환
-//        if (user == null) {
-//            return mapOf("error" to "이메일 또는 비밀번호가 잘못되었습니다.")
-//        }
-//
-//        // 인증에 성공하면 사용자 정보 반환
-//        return mapOf(
-//            "fullName" to user.fullName,
-//            "email" to user.email,
-//            "password" to user.password
-//        )
-//    }
-//}
-}}
+
+}

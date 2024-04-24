@@ -26,8 +26,8 @@ data class UserDtoRequest(
 )
 
 data class LottoDto(
-
+    val numbers: List<List<Int>>
 )
 data class LottoDtoRequest(
-
+    val numbers: List<List<Int>>
 )
